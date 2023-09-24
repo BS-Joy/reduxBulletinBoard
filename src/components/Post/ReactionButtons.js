@@ -11,13 +11,14 @@ const reactionEmojis = {
 
 const ReactionButtons = ({post}) => {
     const dispatch = useDispatch();
-
     return (
         <div className='flex gap-2'>
             {
-                Object.entries(reactionEmojis).map(([name, emoji]) => (
+                Object.entries(reactionEmojis).map(([name, emoji]) => 
+                (
                     <button
                         key={name}
+                        type='button'
                         onClick={() => dispatch(addReactions({postId: post.id, reaction: name}))}
                     >
                         {emoji} {post.reactions[name]}

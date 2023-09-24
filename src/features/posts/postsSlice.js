@@ -12,7 +12,7 @@ const initialState = {
 
 export const fetchPosts = createAsyncThunk('posts/getPosts', async () => {
     const response = await axios.get(POSTS_URL);
-    console.log(response.data);
+    // console.log(response.data)
     return response.data;
 })
 
@@ -50,31 +50,27 @@ const postsSlice = createSlice({
             }
         }
     },
-    extraReducers: builder => {
+    extraReducers(builder) {
         builder
             .addCase(fetchPosts.pending, (state, action) => {
                     state.status = 'loading'
             })
             .addCase(fetchPosts.fulfilled, (state, action) => {
-                state.status = 'secceded';
+                state.status = 'succeeded';
 
                 // adding date and reactions because they are not available in the api data
                 let min = 1;
                 const loadedPosts = action.payload.map(post => {
-                    post.date = sub(new Date(), {minutes: min++});
+                    post.date = sub(new Date(), {minutes: min++}).toISOString();
                     post.reactions = {
-                        reactions: {
                             like: 0,
                             love: 0,
                             wow: 0,
                             coffee: 0
                         }
-                    }
-
                     return post;
                 })
-
-                state.posts.concat(loadedPosts);
+                state.posts = state.posts.concat(loadedPosts);
             })
             .addCase(fetchPosts.rejected, (state, action) => {
                 state.status = 'failed';
@@ -84,6 +80,8 @@ const postsSlice = createSlice({
 });
 
 export const selectAllPost = state => state.posts.posts;
+export const getPostStatus = state => state.posts.status;
+export const getPostError = state => state.posts.error;
 
 export const { postAdded, addReactions } = postsSlice.actions
 
