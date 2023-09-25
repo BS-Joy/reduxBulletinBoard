@@ -1,16 +1,33 @@
 import PostsList from "./components/Post/PostsList";
-// import AddPostForrm from "./components/Post/AddPostForrm";
+import AddPostForrm from "./components/Post/AddPostForrm";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Layout from "./components/layout/Layout";
+import PostDetailedView from "./components/Post/PostDetailedView";
 
 function App() {
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <Layout />,
+      children: [
+        {
+          path: '/',
+          element: <PostsList />
+        },
+        {
+          path: '/post/:id',
+          element: <PostDetailedView />
+        },
+        {
+          path: '/add_post',
+          element: <AddPostForrm />
+        }
+      ]
+    }
+  ])
   return (
     <>
-      <div className="container mx-auto">
-        <div className="bg-white z-10 sticky top-0 text-center border border-green-600 my-4">
-          <h1 className="bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent font-bold text-5xl py-4 ">Bulletin Board</h1>
-        </div>
-        {/* <AddPostForrm /> */}
-        <PostsList />
-      </div>
+      <RouterProvider router={router}></RouterProvider>
     </>
   );
 }

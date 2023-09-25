@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { postAdded } from "../../features/posts/postsSlice";
+import { addPosts } from "../../features/posts/postsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAllUsers } from "../../features/users/usersSlice";
 
@@ -7,8 +7,10 @@ const AddPostForrm = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState('');
+  const [postAddStatus, setPostAddStatus] = useState('idle')
 
-  const users = useSelector(selectAllUsers)
+  const users = useSelector(selectAllUsers);
+  // console.log(users)
 
   const dispatch = useDispatch()
 
@@ -16,17 +18,24 @@ const AddPostForrm = () => {
   const contentHandle = (event) => setContent(event.target.value);
   const onAuthorChanged = (event) => setUserId(event.target.value);
 
+  const canSave = [title, content, userId].every(Boolean) && postAddStatus === 'idle';
+
   const onSubmit = () => {
-    if(title && content) {
-        dispatch(postAdded(title, content, userId))
+    if(canSave) {
+      try {
+        setPostAddStatus('pending')
+        dispatch(addPosts({title, body: content, userId})).unwrap()
 
         setTitle('');
         setContent('');
-        setUserId('')
+        setUserId('');
+      } catch (err) {
+        console.error('Failed to add new post ', err)
+      } finally {
+        setPostAddStatus('idle')
+      }
     }
   }
-
-  const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
 
   return (
     <>

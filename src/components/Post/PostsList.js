@@ -26,8 +26,8 @@ const PostsList = () => {
         </div>
     } else if(postStatus === 'succeeded') {
         const sortedPosts = posts.slice().sort((a, b) => parseISO(b.date) - parseISO(a.date));
-        content = sortedPosts.map((post, index) => 
-            <Post key={index} post={post} />
+        content = sortedPosts.map((post) => 
+            <Post key={post.id} post={post} />
         );
         // console.log(sortedPosts)
     } else if(postStatus === 'failed') {
@@ -36,7 +36,7 @@ const PostsList = () => {
 
     return (
         <div>
-            <h1 className='text-center text-2xl font-bold mb-4'>Posts</h1>
+            <h1 className='text-center text-2xl font-bold my-4'>Posts</h1>
             {content}
         </div>
     )
