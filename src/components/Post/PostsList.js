@@ -12,14 +12,18 @@ const PostsList = () => {
     const postError = useSelector(getPostError);
 
     useEffect(() => {
-        if (postStatus === 'idle') {
-            dispatch(fetchPosts())
+        if(postStatus === 'idle') {
+           dispatch(fetchPosts()) 
         }
-    }, [postStatus, dispatch])
+    }, [dispatch, postStatus, posts])
 
-    let content;
+    let content = [];
+
     if(postStatus === 'loading'){
-        content = <span className="loading loading-bars loading-lg"></span>
+        content = 
+        <div className='flex justify-center'>
+            <span className="loading loading-bars loading-lg"></span>
+        </div>
     } else if(postStatus === 'succeeded') {
         const sortedPosts = posts.slice().sort((a, b) => parseISO(b.date) - parseISO(a.date));
         content = sortedPosts.map((post, index) => 
