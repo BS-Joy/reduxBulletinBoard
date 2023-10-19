@@ -3,6 +3,7 @@ import AddPostForrm from "./components/Post/AddPostForrm";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import PostDetailedView from "./components/Post/PostDetailedView";
+import EditPost from "./components/Post/EditPost";
 
 function App() {
   const router = createBrowserRouter([
@@ -21,6 +22,10 @@ function App() {
         {
           path: '/add_post',
           element: <AddPostForrm />
+        },
+        {
+          path: '/editPost/:postId',
+          element: <EditPost />
         }
       ]
     }

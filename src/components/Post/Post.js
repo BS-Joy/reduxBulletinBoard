@@ -3,10 +3,12 @@ import { selectAllUsers } from '../../features/users/usersSlice';
 import TimeAgo from './TimeAgo';
 import ReactionButtons from './ReactionButtons';
 import { Link } from 'react-router-dom';
+import { selectPostById } from '../../features/posts/postsSlice';
 
 
-const Post = ({post}) => {
+const Post = ({postId}) => {
     const users = useSelector(selectAllUsers);
+    const post = useSelector(state => selectPostById(state, postId));
 
     const author = users.find(user => user.id === post.userId);
 

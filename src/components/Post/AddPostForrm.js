@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { addPosts } from "../../features/posts/postsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAllUsers } from "../../features/users/usersSlice";
+import { useNavigate } from "react-router-dom";
 
 const AddPostForrm = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState('');
-  const [postAddStatus, setPostAddStatus] = useState('idle')
+  const [postAddStatus, setPostAddStatus] = useState('idle');
 
   const users = useSelector(selectAllUsers);
-  // console.log(users)
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const titleHandle = (event) => setTitle(event.target.value);
   const contentHandle = (event) => setContent(event.target.value);
@@ -29,6 +29,7 @@ const AddPostForrm = () => {
         setTitle('');
         setContent('');
         setUserId('');
+        navigate('/')
       } catch (err) {
         console.error('Failed to add new post ', err)
       } finally {
