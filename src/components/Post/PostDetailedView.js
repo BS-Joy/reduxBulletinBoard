@@ -3,18 +3,20 @@ import { selectAllUsers } from '../../features/users/usersSlice';
 import TimeAgo from './TimeAgo';
 import ReactionButtons from './ReactionButtons';
 import { useNavigate, useParams } from 'react-router-dom';
-import { deletePost, selectAllPost } from '../../features/posts/postsSlice';
+import { selectAllPost } from '../../features/posts/postsSlice';
 import { useEffect } from 'react';
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { Link } from 'react-router-dom';
+import { useDeletePostMutation } from '../../features/posts/postsSlice';
 
 const PostDetailedView = () => {
     const users = useSelector(selectAllUsers);
     const allPosts = useSelector(selectAllPost);
     const { id } = useParams();
-    const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
+    const [ deletePost ] = useDeletePostMutation();
 
 
     const postId = Number(id);
@@ -24,11 +26,11 @@ const PostDetailedView = () => {
         document.title = post.title
     }, [post.title])
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         let agree = window.confirm('Are you sure you want to delete the post');
         if(agree) {
             try{
-                dispatch(deletePost({id: post.id})).unwrap();
+                await deletePost({id: post.id}).unwrap();
 
                 navigate('/')
             } catch (err) {

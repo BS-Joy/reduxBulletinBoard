@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { selectAllPost, updatePost } from "../../features/posts/postsSlice";
+import { selectAllPost } from "../../features/posts/postsSlice";
 import { selectAllUsers } from "../../features/users/usersSlice";
+import { useUpdatePostMutation } from "../../features/posts/postsSlice";
 
 const EditPost = () => {
-    const dispatch = useDispatch()
     const { postId } = useParams();
     const navigate = useNavigate();
+
+    const [ updatePost, { isLoading }] = useUpdatePostMutation();
 
     const posts = useSelector(selectAllPost);
     const users = useSelector(selectAllUsers);
@@ -17,7 +19,6 @@ const EditPost = () => {
     const [title, setTitle] = useState(post?.title);
     const [content, setContent] = useState(post?.body);
     const [userId, setUserId] = useState(post?.userId);
-    const [requestStatus, setRequestStatus] = useState('idle');
 
     if(!post) {
         return <h1>No Post Found</h1>
@@ -27,15 +28,14 @@ const EditPost = () => {
     const contentHandle = (event) => setContent(event.target.value)
     const onAuthorChanged = (event) => setUserId(Number(event.target.value));
 
-    const canSave = [title, content, userId].every(Boolean) && requestStatus === 'idle'
+    const canSave = [title, content, userId].every(Boolean) && !isLoading;
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         console.log('updaing....')
         if(canSave) {
             try {
-                setRequestStatus('pending');
 
-                dispatch(updatePost({id: post.id, title, body: content, userId, reactions: post.reactions})).unwrap();
+                await updatePost({id: post.id, title, body: content, userId, reactions: post.reactions}).unwrap();
 
                 console.log('still updating')
 
@@ -46,8 +46,6 @@ const EditPost = () => {
                 navigate(`/post/${postId}`);
             } catch (Error) {
                 console.error(Error);
-            } finally {
-                setRequestStatus('idle')
             }
         }
     }

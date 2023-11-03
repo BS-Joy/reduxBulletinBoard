@@ -1,6 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { addReactions } from '../../features/posts/postsSlice';
+import { useAddReactionMutation } from '../../features/posts/postsSlice';
 
 const reactionEmojis = {
     like: '👍',
@@ -10,7 +9,7 @@ const reactionEmojis = {
 }
 
 const ReactionButtons = ({post}) => {
-    const dispatch = useDispatch();
+    const [addReactions] = useAddReactionMutation();
     return (
         <div className='flex gap-2'>
             {
@@ -19,7 +18,12 @@ const ReactionButtons = ({post}) => {
                     <button
                         key={name}
                         type='button'
-                        onClick={() => dispatch(addReactions({postId: post.id, reaction: name}))}
+                        onClick={() => { 
+                            console.log(name)
+                            const newValue = post.reactions[name] + 1;
+                            console.log(newValue)
+                            addReactions({postId: post.id, reactions: { ...post.reactions, [name]: newValue} })
+                        }}
                     >
                         {emoji} {post.reactions[name]}
                     </button>
