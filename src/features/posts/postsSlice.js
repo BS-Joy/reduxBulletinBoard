@@ -143,4 +143,4 @@ export const {
     selectAll: selectAllPost,
     selectById: selectPostById,
     selectIds: selectPostIds
-} = postAdapter.getSelectors(state => selectPostData(state) ?? initialState)
+} = postAdapter.getSelectors(state => selectPostData(state) ?? initialState);
